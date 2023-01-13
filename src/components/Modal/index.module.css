@@ -1,0 +1,101 @@
+.container {
+    background-color: rgba(0, 0, 0, 0.5);
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wrapper {
+    height: 55rem;
+    width: 70rem;
+    background-color: white;
+    border-radius: .15rem;
+    padding: .2rem;
+}
+
+.title {
+    background-color: #194A95;
+    color: white;
+    font-weight: bold;
+    height: 2.2rem;
+    width: 100%;
+    line-height: 2.2rem;
+    text-indent: 1.5rem;
+    position: relative;
+    margin-bottom: .8rem;
+}
+
+.colse-btn {
+    background-color: white;
+    width: 1.5rem;
+    height: 1.5rem;
+    position: absolute;
+    top: .35rem;
+    right: .35rem;
+    border-radius: .1rem;
+}
+
+.colse-btn:active {
+    box-shadow: inset 0.3rem 0.3rem 0.5rem 0.1rem #00000082;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.block {
+    height: 23rem;
+    width: 100%;
+    display: flex;
+}
+
+.block-title {
+    font-weight: bold;
+    text-indent: 1.5rem;
+    flex: 1;
+}
+
+.input-box-wrapper {
+    flex: 8;
+}
+
+.input-box {
+    resize: none;
+    height: 20.75rem;
+    width: 61.2rem;
+    font-size: 1.2rem;
+}
+
+.input-box:focus {
+    outline-color: #84c6fb;
+}
+
+.btn-container {
+    border-top: 2px solid #E2E2E2;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.btn {
+    margin: 1.75rem 1rem 0 0;
+    color: white;
+    background-color: #006DCC;
+    border: none;
+    height: 2.5rem;
+    width: 7rem;
+    font-weight: bold;
+    font-size: 1.1rem;
+    border-radius: .45rem;
+}
+
+.btn:active {
+    box-shadow: inset 0.3rem 0.3rem 0.5rem 0.1rem #00000044;
+}

@@ -1,0 +1,34 @@
+.blue-strip {
+    background-color: #124191;
+    padding-top: .8rem;
+}
+
+.tabbar {
+    display: flex;
+    justify-content: left;
+    background-color: #D0D9E9;
+    border-bottom: .1rem solid #BEC2DB;
+}
+
+.tab {
+    padding: .5rem 3rem;
+    text-decoration: none;
+}
+
+.tab:hover {
+    background-color: #8195B2;
+}
+
+.tab-active {
+    background-color: #8195B2;
+}
+
+
+/* 不同层级样式，可以按需新增 */
+.tab-level1 {
+    color: #304F93;
+}
+
+.tab-level2 {
+    color: #6A6B73;
+}
