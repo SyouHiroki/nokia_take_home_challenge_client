@@ -1,4 +1,5 @@
 .container {
     margin: .5rem;
     border: .1rem solid #194A95;
+    min-height: 89vh;
 }
