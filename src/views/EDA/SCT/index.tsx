@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Cell from '../../../components/Cell'
-import { connectServer } from '../../../ws/ws'
+import { connectServer, emitUpdateList } from '../../../ws/ws'
 import styles from './index.module.css'
 
 export interface itemType {
@@ -35,6 +35,10 @@ export const SCT = () => {
     return (
         <div className={styles['container']}>
             <Cell list={list} />
+            <button onClick={() => {
+                setList(admin)
+                emitUpdateList(admin)
+            }}>debug:clear all</button>
         </div>
     )
 }
