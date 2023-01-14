@@ -1,19 +1,10 @@
 import styles from './index.module.css'
 import { Rnd } from 'react-rnd'
 import ContentBox from '../ContentBox'
-
-
-interface itemTpye {
-    row: number,
-    col: number,
-    question: string,
-    answer: string,
-    editable: boolean,
-    children: Array<itemTpye>
-}
+import { itemType } from '../../views/EDA/SCT'
 
 interface propsType {
-    list: Array<itemTpye>
+    list: Array<itemType>
     setList: Function
 }
 

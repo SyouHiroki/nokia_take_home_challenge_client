@@ -1,12 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom'
 import styles from './index.module.css'
-
-interface itemType {
-    id: number,
-    text: string,
-    path: string,
-    flag: string
-}
+import { itemType } from '../../routers'
 
 interface propsType {
     list: Array<itemType>,

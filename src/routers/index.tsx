@@ -8,6 +8,13 @@ import RCA from '../views/RCA'
 import RCAFacts from '../views/RCAFacts'
 import SUMMARY from '../views/SUMMARY'
 
+export interface itemType {
+    id: number,
+    text: string,
+    path: string,
+    flag: string
+}
+
 const IndexRouters = () => {
 
     const list = [

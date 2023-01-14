@@ -3,22 +3,15 @@ import { useState } from 'react'
 import lodash from 'lodash'
 import Modal from '../Modal'
 import arrowImg from '../../assets/arrow.svg'
-
-interface itemTpye {
-    row: number,
-    col: number,
-    question: string,
-    answer: string,
-    editable: boolean,
-    children: Array<itemTpye>
-}
+import { itemType } from '../../views/EDA/SCT'
+import { emitUpdateList } from '../../ws/ws'
 
 interface propsType {
     question: string,
     answer: string,
     row: number,
     col: number,
-    list: Array<itemTpye>
+    list: Array<itemType>
     setList: Function
 }
 
@@ -36,8 +29,10 @@ const ContentBox = (props: propsType) => {
 
         for (let i = 0; i < listClone.length; i++) {
             if (String(listClone[i].row) === currentRow) {
-                listClone.push({ row: listClone.length, col: 0, question: '', answer: '', editable: true, children: [] })
+                listClone.push({ row: listClone.length, col: 0, question: '', answer: '', editing: '', children: [] })
+
                 setList(listClone)
+                emitUpdateList(listClone)
 
                 return
             }
@@ -50,8 +45,10 @@ const ContentBox = (props: propsType) => {
 
         for (let i = 0; i < listClone.length; i++) {
             if (String(listClone[i].row) === currentRow) {
-                listClone[i].children.push({ row: i, col: listClone[i].children.length + 1, question: '', answer: '', editable: true, children: [] })
+                listClone[i].children.push({ row: i, col: listClone[i].children.length + 1, question: '', answer: '', editing: '', children: [] })
+
                 setList(listClone)
+                emitUpdateList(listClone)
 
                 return
             }
@@ -64,7 +61,7 @@ const ContentBox = (props: propsType) => {
         if (dBCCol === '0') {
             for (let item of list) {
                 if (String(item.row) === dBCRow) {
-                    if (item.editable) {
+                    if (item.editing === '') {
                         //模态框显示/隐藏
                         setModalIsShow(true)
 
@@ -82,7 +79,7 @@ const ContentBox = (props: propsType) => {
 
             for (let childrenItem of item.children) {
                 if (String(childrenItem.row) === dBCRow && String(childrenItem.col) === dBCCol) {
-                    if (childrenItem.editable) {
+                    if (childrenItem.editing === '') {
                         //模态框显示/隐藏
                         setModalIsShow(true)
 

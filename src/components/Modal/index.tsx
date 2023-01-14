@@ -3,21 +3,15 @@ import lodash from 'lodash'
 import styles from './index.module.css'
 import { useState } from 'react'
 import closeImg from '../../assets/close.svg'
-
-interface itemTpye {
-    row: number,
-    col: number,
-    question: string,
-    answer: string,
-    children: Array<itemTpye>
-}
+import { itemType } from '../../views/EDA/SCT'
+import { emitUpdateList } from '../../ws/ws'
 
 interface propsType {
     question: string,
     answer: string,
     currentRow: string,
     currentCol: string,
-    list: Array<itemTpye>,
+    list: Array<itemType>,
     setList: Function,
     setModalIsShow: Function
 }
@@ -35,7 +29,9 @@ const Modal = (props: propsType) => {
                 let listClone = lodash.cloneDeep(list)
                 listClone[i].question = newQuestion
                 listClone[i].answer = newAnswer
+
                 setList(listClone)
+                emitUpdateList(listClone)
 
                 return
             }
@@ -51,7 +47,9 @@ const Modal = (props: propsType) => {
                     let listClone = lodash.cloneDeep(list)
                     listClone[i].children[j].question = newQuestion
                     listClone[i].children[j].answer = newAnswer
+
                     setList(listClone)
+                    emitUpdateList(listClone)
 
                     return
                 }
