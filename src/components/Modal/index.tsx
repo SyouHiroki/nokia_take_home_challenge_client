@@ -12,48 +12,34 @@ interface propsType {
     currentRow: string,
     currentCol: string,
     list: Array<itemType>,
-    setList: Function,
     setModalIsShow: Function
 }
 
 const Modal = (props: propsType) => {
 
-    const { list, setList, currentRow, currentCol, setModalIsShow, question, answer } = props
+    const { list, currentRow, currentCol, setModalIsShow, question, answer } = props
     const [newQuestion, setNewQuestion] = useState(question)
     const [newAnswer, setNewAnswer] = useState(answer)
 
     //修改业务
-    const handler = () => {
-        for (let i = 0; i < list.length; i++) {
-            if (String(list[i].row) === currentRow && String(list[i].col) === currentCol) {//找到了
-                let listClone = lodash.cloneDeep(list)
-                listClone[i].question = newQuestion
-                listClone[i].answer = newAnswer
+    const confirm = () => {
+        let listClone = lodash.cloneDeep(list)
+        const row = parseInt(currentRow)
+        const col = parseInt(currentCol)
 
-                setList(listClone)
-                emitUpdateList(listClone)
+        if (col === 0) {//如果就是在第0列，则无需找子节点了
+            listClone[row].question = newQuestion
+            listClone[row].answer = newAnswer
+            listClone[row].editable = true
 
-                return
-            }
+            emitUpdateList(listClone)
+        } else {//如果在其他列，则需要找子节点
+            // col-1是因为row占用了一位，换到col里就需要-1，要是不明白可以打印一下col看看就知道 
+            listClone[row].children[col - 1].question = newQuestion
+            listClone[row].children[col - 1].answer = newAnswer
+            listClone[row].children[col - 1].editable = true
 
-            //没有就不必进去找了
-            if (list[i].children.length === 0) {
-                continue
-            }
-
-            //遍历子节点
-            for (let j = 0; j < list[i].children.length; j++) {
-                if (String(list[i].children[j].row) === currentRow && String(list[i].children[j].col) === currentCol) {//找到了
-                    let listClone = lodash.cloneDeep(list)
-                    listClone[i].children[j].question = newQuestion
-                    listClone[i].children[j].answer = newAnswer
-
-                    setList(listClone)
-                    emitUpdateList(listClone)
-
-                    return
-                }
-            }
+            emitUpdateList(listClone)
         }
     }
 
@@ -64,6 +50,7 @@ const Modal = (props: propsType) => {
 
                 <div className={styles['title']}>
                     {'Why' + (parseInt(currentCol) + 1)}
+                    {/* 关闭按钮 */}
                     <img
                         src={closeImg}
                         alt='closeImg'
@@ -99,15 +86,17 @@ const Modal = (props: propsType) => {
                 </div>
 
                 <div className={styles['btn-container']}>
+                    {/* 确定按钮 */}
                     <button
                         className={styles['btn']}
                         onClick={() => {
-                            handler()
+                            confirm()
                             setModalIsShow(false)
                         }}
                     >Save
                     </button>
 
+                    {/* 取消按钮 */}
                     <button
                         className={styles['btn']}
                         onClick={() => { setModalIsShow(false) }}

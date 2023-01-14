@@ -12,13 +12,12 @@ interface propsType {
     row: number,
     col: number,
     list: Array<itemType>
-    setList: Function
 }
 
 
 const ContentBox = (props: propsType) => {
 
-    const { question, answer, row, col, list, setList } = props
+    const { question, answer, row, col, list } = props
     const [modalIsShow, setModalIsShow] = useState(false)
     const [currentRow, setCurrentRow] = useState('')
     const [currentCol, setCurrentCol] = useState('')
@@ -29,9 +28,8 @@ const ContentBox = (props: propsType) => {
 
         for (let i = 0; i < listClone.length; i++) {
             if (String(listClone[i].row) === currentRow) {
-                listClone.push({ row: listClone.length, col: 0, question: '', answer: '', editing: '', children: [] })
+                listClone.push({ row: listClone.length, col: 0, question: '', answer: '', editable: true, children: [] })
 
-                setList(listClone)
                 emitUpdateList(listClone)
 
                 return
@@ -45,9 +43,8 @@ const ContentBox = (props: propsType) => {
 
         for (let i = 0; i < listClone.length; i++) {
             if (String(listClone[i].row) === currentRow) {
-                listClone[i].children.push({ row: i, col: listClone[i].children.length + 1, question: '', answer: '', editing: '', children: [] })
+                listClone[i].children.push({ row: i, col: listClone[i].children.length + 1, question: '', answer: '', editable: true, children: [] })
 
-                setList(listClone)
                 emitUpdateList(listClone)
 
                 return
@@ -57,37 +54,40 @@ const ContentBox = (props: propsType) => {
 
     //判断是否可编辑，是才显示模态框
     const handleDBCEdit = (dBCRow: string, dBCCol: string) => {
-        //如果就是在第0列，则无需遍历子节点了
-        if (dBCCol === '0') {
-            for (let item of list) {
-                if (String(item.row) === dBCRow) {
-                    if (item.editing === '') {
-                        //模态框显示/隐藏
-                        setModalIsShow(true)
 
-                        return
-                    }
-                }
+        let listClone = lodash.cloneDeep(list)
+        const row = parseInt(dBCRow)
+        const col = parseInt(dBCCol)
+
+        if (col === 0) {//如果就是在第0列，则无需找子节点了
+            if (listClone[row].editable) {
+                //进来后第一时间设置不可编辑，防止同时修改
+                listClone[row].editable = false
+                //发送到服务器
+                emitUpdateList(listClone)
+                //TODO: 打开模态框设置不可编辑，也上传服务器了，但是另外一边还是可以编辑
+
+                //模态框显示/隐藏
+                setModalIsShow(true)
+
+                return
             }
+        } else {//如果在其他列，则需要找子节点
+            if (listClone[row].children[col - 1].editable) {/* col-1是因为row占用了一位，换到col里就需要-1，要是不明白可以打印一下col看看就知道 */
+                //进来后第一时间设置不可编辑，防止同时修改
+                listClone[row].editable = false
+                // 发送到服务器
+                emitUpdateList(listClone)
+                //TODO: 打开模态框设置不可编辑，也上传服务器了，但是另外一边还是可以编辑
+
+                //模态框显示/隐藏
+                setModalIsShow(true)
+
+                return
+            }
+
         }
 
-        //如果在其他列，则需要遍历子节点
-        for (let item of list) {
-            if (item.children.length === 0) {
-                continue
-            }
-
-            for (let childrenItem of item.children) {
-                if (String(childrenItem.row) === dBCRow && String(childrenItem.col) === dBCCol) {
-                    if (childrenItem.editing === '') {
-                        //模态框显示/隐藏
-                        setModalIsShow(true)
-
-                        return
-                    }
-                }
-            }
-        }
     }
 
     return (
@@ -152,7 +152,6 @@ const ContentBox = (props: propsType) => {
                     currentRow={currentRow}
                     currentCol={currentCol}
                     setModalIsShow={setModalIsShow}
-                    setList={setList}
                     list={list}
                 /> : null
             }

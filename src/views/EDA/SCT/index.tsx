@@ -8,7 +8,7 @@ export interface itemType {
     col: number,
     question: string,
     answer: string,
-    editing: string,
+    editable: boolean,
     children: Array<itemType>
 }
 
@@ -17,13 +17,13 @@ export const SCT = () => {
 
     const admin = [
         {
-            row: 0, col: 0, question: '', answer: '', editing: '', children: [
+            row: 0, col: 0, question: '', answer: '', editable: true, children: [
                 // { row: 0, col: 1, question: 'row: 0', answer: 'col: 1', children: [] }
             ]
         }
     ]
 
-    //修改触发重新渲染
+    //数据驱动视图更新：修改数据触发重新渲染
     const [list, setList] = useState(admin)
 
     useEffect(() => {
@@ -34,7 +34,7 @@ export const SCT = () => {
 
     return (
         <div className={styles['container']}>
-            <Cell list={list} setList={setList} />
+            <Cell list={list} />
         </div>
     )
 }

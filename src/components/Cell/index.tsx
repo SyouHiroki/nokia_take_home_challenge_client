@@ -5,12 +5,11 @@ import { itemType } from '../../views/EDA/SCT'
 
 interface propsType {
     list: Array<itemType>
-    setList: Function
 }
 
 const Cell = (props: propsType) => {
 
-    const { list, setList } = props
+    const { list } = props
 
     return (
         <>
@@ -48,7 +47,6 @@ const Cell = (props: propsType) => {
                                 row={item.row}
                                 col={item.col}
                                 list={list}
-                                setList={setList}
                             />
                         </Rnd>
                     </div>
@@ -87,7 +85,6 @@ const Cell = (props: propsType) => {
                                     row={item.row}
                                     col={item.col}
                                     list={list}
-                                    setList={setList}
                                 />
                             </Rnd>
                         </div>)
