@@ -7,6 +7,7 @@ import { itemType } from '../../views/EDA/SCT'
 import { emitUpdateList } from '../../ws/ws'
 
 interface propsType {
+    editable: boolean,
     question: string,
     answer: string,
     row: number,
@@ -17,40 +18,41 @@ interface propsType {
 
 const ContentBox = (props: propsType) => {
 
-    const { question, answer, row, col, list } = props
+    const { question, answer, row, col, list, editable } = props
     const [modalIsShow, setModalIsShow] = useState(false)
     const [currentRow, setCurrentRow] = useState('')
     const [currentCol, setCurrentCol] = useState('')
 
-    //向下增加一行
-    const addRow = (currentRow: string) => {
+    //向下增加一行, 防抖预防快速连点数据库撑不住
+    const addRow = lodash.debounce(() => {
         let listClone = lodash.cloneDeep(list)
+        let makeChildren = []
 
-        for (let i = 0; i < listClone.length; i++) {
-            if (String(listClone[i].row) === currentRow) {
-                listClone.push({ row: listClone.length, col: 0, question: '', answer: '', editable: true, children: [] })
-
-                emitUpdateList(listClone)
-
-                return
-            }
+        //填充足够的列
+        for (let i = 0; i < listClone[0].children.length; i++) {
+            makeChildren.push({ row: listClone.length, col: i + 1, question: '', answer: '', editable: true, children: [] })
         }
-    }
 
-    //向右增加一列
-    const addCol = (currentRow: string) => {
+        //将填充足够的children数组作为列插进去
+        listClone.push({ row: listClone.length, col: 0, question: '', answer: '', editable: true, children: makeChildren })
+
+        //更新
+        emitUpdateList(listClone)
+    }, 100)
+
+    //向右增加一列，, 防抖预防快速连点数据库撑不住
+    const addCol = lodash.debounce(() => {
         let listClone = lodash.cloneDeep(list)
+        let colMark = listClone[0].children.length + 1
 
+        //每一行都要插一个
         for (let i = 0; i < listClone.length; i++) {
-            if (String(listClone[i].row) === currentRow) {
-                listClone[i].children.push({ row: i, col: listClone[i].children.length + 1, question: '', answer: '', editable: true, children: [] })
-
-                emitUpdateList(listClone)
-
-                return
-            }
+            listClone[i].children.push({ row: i, col: colMark, question: '', answer: '', editable: true, children: [] })
         }
-    }
+
+        //更新
+        emitUpdateList(listClone)
+    }, 100)
 
     //判断是否可编辑，是才显示模态框
     const handleDBCEdit = (dBCRow: string, dBCCol: string) => {
@@ -85,7 +87,7 @@ const ContentBox = (props: propsType) => {
             onDoubleClick={(e) => {
                 let dBCRow = e.currentTarget.getAttribute('data-row')!
                 let dBCCol = e.currentTarget.getAttribute('data-col')!
-                //传入当前选中的元素的行和列,因为需要父传子，所以用了hook
+                //传入当前选中的元素的行和列,因为需要父传子，所以用了hooks
                 setCurrentRow(dBCRow)
                 setCurrentCol(dBCCol)
 
@@ -96,14 +98,14 @@ const ContentBox = (props: propsType) => {
         >
             <div className={styles['title']}>{'Why' + (col + 1)}</div>
 
-            <div className={styles['wrapper']}>
+            <div className={`${styles['wrapper']} ${question === '' && answer === '' ? styles['wrapper-white-bgc'] : ''} ${editable ? '' : styles['wrapper-red-bgc']}`}>
                 <div className={styles['container']} style={{ borderBottom: '2px solid white' }}>
-                    <div className={styles['container-text']} >QUESTION</div>
+                    {question !== '' || answer !== '' ? <div className={styles['container-text']}>QUESTION</div> : null}
                     <div>{question}</div>
                 </div>
 
                 <div className={styles['container']}>
-                    <div className={styles['container-text']}>ANSWER</div>
+                    {question !== '' || answer !== '' ? <div className={styles['container-text']}>ANSWER</div> : null}
                     <div>{answer}</div>
                 </div>
             </div>
@@ -116,8 +118,7 @@ const ContentBox = (props: propsType) => {
                         src={arrowImg}
                         alt='arrowImg'
                         className={styles['dock-btn']}
-                        data-row={row}
-                        onClick={(e) => { addCol(e.currentTarget.getAttribute('data-row')!) }}
+                        onClick={() => { addCol() }}
                     />
                 </div>
                 <div className={styles['dock-btn-wrapper']}>
@@ -126,8 +127,7 @@ const ContentBox = (props: propsType) => {
                         src={arrowImg}
                         alt='arrowImg'
                         className={styles['dock-btn']}
-                        data-row={row}
-                        onClick={(e) => { addRow(e.currentTarget.getAttribute('data-row')!) }}
+                        onClick={() => { addRow() }}
                     />
                 </div>
             </div>

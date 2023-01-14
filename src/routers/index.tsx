@@ -40,6 +40,7 @@ const IndexRouters = () => {
 
                     <Route path='/eda' element={<EDA />}>
                         <Route path='/eda/sct' element={<KeepAlive><SCT /></KeepAlive>} />
+                        {/* <Route path='/eda/sct' element={<SCT />} /> */}
                         <Route path='/eda/et' element={<ET />} />
                         <Route path='/eda/st' element={<ST />} />
 

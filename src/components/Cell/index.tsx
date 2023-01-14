@@ -42,6 +42,7 @@ const Cell = (props: propsType) => {
                             disableDragging={true}
                         >
                             <ContentBox
+                                editable={item.editable}
                                 question={item.question}
                                 answer={item.answer}
                                 row={item.row}
@@ -80,6 +81,7 @@ const Cell = (props: propsType) => {
                                 disableDragging={true}
                             >
                                 <ContentBox
+                                    editable={item.editable}
                                     question={item.question}
                                     answer={item.answer}
                                     row={item.row}

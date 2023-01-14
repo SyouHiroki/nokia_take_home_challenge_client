@@ -45,7 +45,7 @@ const Modal = (props: propsType) => {
     }, [])
 
     //修改业务
-    const confirm = () => {
+    const handleConfirm = () => {
         let listClone = lodash.cloneDeep(list)
         const row = parseInt(currentRow)
         const col = parseInt(currentCol)
@@ -66,6 +66,24 @@ const Modal = (props: propsType) => {
         }
     }
 
+    //取消业务，将不可编辑改为可编辑（取消锁定）
+    const handleCancel = () => {
+        let listClone = lodash.cloneDeep(list)
+        const row = parseInt(currentRow)
+        const col = parseInt(currentCol)
+
+        if (col === 0) {//如果就是在第0列，则无需找子节点了
+            listClone[row].editable = true
+
+            emitUpdateList(listClone)
+        } else {//如果在其他列，则需要找子节点
+            // col-1是因为row占用了一位，换到col里就需要-1，要是不明白可以打印一下col看看就知道 
+            listClone[row].children[col - 1].editable = true
+
+            emitUpdateList(listClone)
+        }
+    }
+
     return createPortal(
         <div className={styles['container']}>
 
@@ -78,7 +96,10 @@ const Modal = (props: propsType) => {
                         src={closeImg}
                         alt='closeImg'
                         className={styles['colse-btn']}
-                        onClick={() => { setModalIsShow(false) }}
+                        onClick={() => {
+                            handleCancel()
+                            setModalIsShow(false)
+                        }}
                     />
                 </div>
 
@@ -113,7 +134,7 @@ const Modal = (props: propsType) => {
                     <button
                         className={styles['btn']}
                         onClick={() => {
-                            confirm()
+                            handleConfirm()
                             setModalIsShow(false)
                         }}
                     >Save
@@ -122,7 +143,10 @@ const Modal = (props: propsType) => {
                     {/* 取消按钮 */}
                     <button
                         className={styles['btn']}
-                        onClick={() => { setModalIsShow(false) }}
+                        onClick={() => {
+                            handleCancel()
+                            setModalIsShow(false)
+                        }}
                     >Cancel
                     </button>
                 </div>

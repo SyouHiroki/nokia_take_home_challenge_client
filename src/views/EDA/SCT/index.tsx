@@ -38,7 +38,7 @@ export const SCT = () => {
             <button onClick={() => {
                 setList(admin)
                 emitUpdateList(admin)
-            }}>debug:clear all</button>
+            }}>debug: clear</button>
         </div>
     )
 }

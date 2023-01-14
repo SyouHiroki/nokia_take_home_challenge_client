@@ -1,6 +1,5 @@
 import { Outlet } from 'react-router-dom'
 import TabBar from '../../components/TabBar'
-import styles from './index.module.css'
 
 export const EDA = () => {
 

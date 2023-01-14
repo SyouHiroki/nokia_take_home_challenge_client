@@ -15,15 +15,13 @@ export const emitUpdateList = (list: Array<itemType>) => {
 export const connectServer = (setList: Function) => {
 
     sio.on('connect', () => {
-        console.log('connect', sio.id)
+        console.log('connected, socket id:', sio.id)
     })
 
 
     sio.on('send-data-to-client', (payload) => {
-        let listData = JSON.parse(JSON.parse(payload).data).data
+        let listData = JSON.parse(payload[0]).data
 
         setList(listData)
-
-        console.log('listData', listData)
     })
 }
