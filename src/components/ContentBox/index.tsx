@@ -61,12 +61,6 @@ const ContentBox = (props: propsType) => {
 
         if (col === 0) {//如果就是在第0列，则无需找子节点了
             if (listClone[row].editable) {
-                //进来后第一时间设置不可编辑，防止同时修改
-                listClone[row].editable = false
-                //发送到服务器
-                emitUpdateList(listClone)
-                //TODO: 打开模态框设置不可编辑，也上传服务器了，但是另外一边还是可以编辑
-
                 //模态框显示/隐藏
                 setModalIsShow(true)
 
@@ -74,12 +68,6 @@ const ContentBox = (props: propsType) => {
             }
         } else {//如果在其他列，则需要找子节点
             if (listClone[row].children[col - 1].editable) {/* col-1是因为row占用了一位，换到col里就需要-1，要是不明白可以打印一下col看看就知道 */
-                //进来后第一时间设置不可编辑，防止同时修改
-                listClone[row].editable = false
-                // 发送到服务器
-                emitUpdateList(listClone)
-                //TODO: 打开模态框设置不可编辑，也上传服务器了，但是另外一边还是可以编辑
-
                 //模态框显示/隐藏
                 setModalIsShow(true)
 

@@ -1,4 +1,5 @@
-import { HashRouter, Routes, Route, Navigate, Router } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
+import KeepAlive from 'react-activation'
 import TabBar from '../components/TabBar'
 import EDA from '../views/EDA'
 import ET from '../views/EDA/ET'
@@ -38,7 +39,7 @@ const IndexRouters = () => {
                     <Route path='/rca' element={<RCA />} />
 
                     <Route path='/eda' element={<EDA />}>
-                        <Route path='/eda/sct' element={<SCT />} />
+                        <Route path='/eda/sct' element={<KeepAlive><SCT /></KeepAlive>} />
                         <Route path='/eda/et' element={<ET />} />
                         <Route path='/eda/st' element={<ST />} />
 

@@ -1,7 +1,7 @@
 import { createPortal } from 'react-dom'
 import lodash from 'lodash'
 import styles from './index.module.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import closeImg from '../../assets/close.svg'
 import { itemType } from '../../views/EDA/SCT'
 import { emitUpdateList } from '../../ws/ws'
@@ -20,6 +20,29 @@ const Modal = (props: propsType) => {
     const { list, currentRow, currentCol, setModalIsShow, question, answer } = props
     const [newQuestion, setNewQuestion] = useState(question)
     const [newAnswer, setNewAnswer] = useState(answer)
+
+    const setNonEditable = () => {
+        let listClone = lodash.cloneDeep(list)
+        const row = parseInt(currentRow)
+        const col = parseInt(currentCol)
+
+        if (col === 0) {//如果就是在第0列，则无需找子节点了
+            listClone[row].editable = false
+
+            emitUpdateList(listClone)
+        } else {//如果在其他列，则需要找子节点
+            // col-1是因为row占用了一位，换到col里就需要-1，要是不明白可以打印一下col看看就知道 
+            listClone[row].children[col - 1].editable = false
+
+            emitUpdateList(listClone)
+        }
+
+    }
+
+    useEffect(() => {
+        //进来后第一时间设置不可编辑，防止同时修改
+        setNonEditable()
+    }, [])
 
     //修改业务
     const confirm = () => {
